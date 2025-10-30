@@ -5,7 +5,7 @@
 и загружает в коллекцию Qdrant.
 
 Запуск:
-  python -m full_qdrant.ingest
+  python -m full.ingest
 """
 
 from __future__ import annotations
