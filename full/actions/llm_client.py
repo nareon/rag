@@ -36,6 +36,8 @@ class LLMClient:
             raise RuntimeError("Не заданы OPENAI_BASE_URL или OPENAI_MODEL в .env")
 
         self.headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
+        # Клиент статeless, поэтому переиспользовать один экземпляр в рамках
+        # запроса безопасно.  Requests сам управляет HTTP-сессией.
 
     # -------------------------------------------------------
     def generate(
@@ -46,6 +48,9 @@ class LLMClient:
         extra: Optional[Dict[str, Any]] = None,
     ) -> str:
         """Делает POST-запрос к /chat/completions и возвращает ответ модели."""
+
+        # Метод принимает список сообщений «как есть», чтобы повторно
+        # использовать всю инфраструктуру промптов из Rasa actions.
 
         url = f"{self.base_url}/chat/completions"
         payload = {
@@ -67,4 +72,7 @@ class LLMClient:
                 err = e
                 time.sleep(0.3)
 
+        # Если ни одна попытка не удалась, оборачиваем исходную ошибку в
+        # RuntimeError, чтобы вызывающая сторона могла показать человекочитаемое
+        # сообщение.
         raise RuntimeError(f"LLM error: {err}")

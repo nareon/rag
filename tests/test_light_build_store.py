@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 # Provide lightweight stubs for optional heavy dependencies used in the module.
 if "numpy" not in sys.modules:
     numpy_stub = types.ModuleType("numpy")
+    # Минимальный набор функций, чтобы модуль смог импортироваться в изолированной среде.
     numpy_stub.asarray = lambda data, dtype=None: data
     numpy_stub.float32 = float
     numpy_stub.save = lambda *_args, **_kwargs: None
@@ -25,9 +26,11 @@ if "sentence_transformers" not in sys.modules:
 
     class _DummySentenceTransformer:  # pragma: no cover - helper stub
         def __init__(self, *_args, **_kwargs) -> None:
+            # Конструктор не делает ничего, чтобы тесты не зависели от весов модели.
             pass
 
         def encode(self, texts, **_kwargs):
+            # Возвращаем фиксированные векторы, важен только размер списка.
             return [[1.0] * 3 for _ in texts]
 
     st_stub.SentenceTransformer = _DummySentenceTransformer  # type: ignore[attr-defined]
@@ -38,6 +41,7 @@ build_store = importlib.import_module("light.build_store")
 
 def test_chunk_text_respects_overlap():
     text = " ".join(f"w{i}" for i in range(10))
+    # Ожидаем, что последние слова пересекаются согласно настройке overlap=1.
     chunks = list(build_store._chunk_text(text, max_len=4, overlap=1))
 
     assert chunks == [
@@ -49,6 +53,8 @@ def test_chunk_text_respects_overlap():
 
 
 def test_looks_like_russian_detects_script():
+    # Русский текст с латиницей должен считаться русским.
     assert build_store._looks_like_russian("Привет, world!") is True
+    # А чисто латинский текст — нет.
     assert build_store._looks_like_russian("Hello world") is False
     assert build_store._looks_like_russian("") is True
