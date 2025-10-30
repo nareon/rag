@@ -6,7 +6,7 @@ CLI-пайплайн без Rasa:
 - опционально вызывает LLM и печатает ответ.
 
 Запуск:
-  python -m full_qdrant.qa_cli "Как подключить Telegram к Rasa?" --llm
+  python -m full.qa_cli "Как подключить Telegram к Rasa?" --llm
 """
 
 from __future__ import annotations
