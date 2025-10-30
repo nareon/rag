@@ -16,6 +16,7 @@ if "full.actions.retriever" not in sys.modules:
     retriever_stub = types.ModuleType("full.actions.retriever")
 
     def _fake_search(*_args, **_kwargs):  # pragma: no cover - helper stub
+        # Возвращаем пустой список, потому что в тестах важно только объединение результатов.
         return []
 
     retriever_stub.search_hybrid = _fake_search  # type: ignore[attr-defined]
@@ -27,6 +28,7 @@ if "full.actions.llm_client" not in sys.modules:
 
     class _DummyLLMClient:  # pragma: no cover - helper stub
         def generate(self, *_, **__):
+            # CLI вызывает generate только когда нужно сгенерировать ответ, но в тестах он не нужен.
             return ""
 
     llm_stub.LLMClient = _DummyLLMClient  # type: ignore[attr-defined]
@@ -54,6 +56,7 @@ def test_merge_hits_prefers_highest_score_per_id():
 
 
 def test_merge_hits_respects_limit_and_sorting():
+    # Проверяем, что сортировка идёт по убыванию score, а ограничение работает.
     hits_one = [
         {"id": "A", "score": 0.2, "payload": {}},
         {"id": "B", "score": 0.6, "payload": {}},
