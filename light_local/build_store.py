@@ -7,7 +7,7 @@
 - сохраняет эмбеддинги и метаданные на диск для дальнейшего оффлайн-поиска.
 
 Запуск:
-  python -m pipelines.light_local.build_store
+  python -m light_local.build_store
 """
 
 from __future__ import annotations
