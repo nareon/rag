@@ -3,10 +3,10 @@
 Использует локально подготовленные файлы (embeddings.npy + payloads.jsonl).
 
 Перед запуском необходимо выполнить подготовку:
-  python -m pipelines.light_local.build_store
+  python -m light_local.build_store
 
 Запуск самого CLI:
-  python -m pipelines.light_local.qa_cli "Как подключить бота?" --llm
+  python -m light_local.qa_cli "Как подключить бота?" --llm
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from pipelines.full_qdrant.actions.llm_client import LLMClient
+from full_qdrant.actions.llm_client import LLMClient
 
 STORE_DIR = Path(__file__).resolve().parent / "store"
 EMB_PATH = STORE_DIR / "embeddings.npy"
@@ -52,7 +52,7 @@ def _ensure_store() -> None:
         missing_str = ", ".join(str(p) for p in missing)
         raise SystemExit(
             "Не найдено локальное хранилище. Сначала выполните подготовку: "
-            "python -m pipelines.light_local.build_store. \nОтсутствуют файлы: "
+            "python -m light_local.build_store. \nОтсутствуют файлы: "
             + missing_str
         )
 

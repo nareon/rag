@@ -18,7 +18,7 @@ from pathlib import Path
 
 # ---------------- Загрузка окружения ----------------
 # Подтягивает .env из корня проекта
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / ".env")
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 # ---------------- Класс клиента ----------------
 class LLMClient:
