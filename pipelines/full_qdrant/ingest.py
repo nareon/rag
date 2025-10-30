@@ -1,23 +1,23 @@
-# ingest/ingest.py
 """
-Назначение:
-  Скрипт собирает тексты (документацию Rasa и локальные файлы),
-  разбивает их на смысловые фрагменты (чанки),
-  векторизует моделью BAAI/bge-m3
-  и записывает результаты в векторную базу Qdrant.
+Полный пайплайн подготовки данных для Qdrant.
+Собирает тексты (документацию Rasa и локальные файлы),
+разбивает их на чанки, векторизует моделью BAAI/bge-m3
+и загружает в коллекцию Qdrant.
 
-Результат:
-  Создаётся коллекция 'rasa_mvp' с эмбеддингами и метаданными.
+Запуск:
+  python -m pipelines.full_qdrant.ingest
 """
 
-import os
+from __future__ import annotations
+
 from pathlib import Path
+
 import requests
 from bs4 import BeautifulSoup
-from tqdm import tqdm
-from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 from qdrant_client.http import models
+from sentence_transformers import SentenceTransformer
+from tqdm import tqdm
 
 # ---------------- НАСТРОЙКИ ----------------
 
@@ -37,73 +37,61 @@ LOCAL_DIR = Path("data")
 
 
 def fetch_text_from_url(url: str) -> str:
-    """
-    Загружает HTML со страницы и очищает его от служебных тегов.
-    Возвращает чистый текст.
-    """
+    """Загружает HTML и возвращает очищенный текст."""
+
     try:
         html = requests.get(url, timeout=10).text
         soup = BeautifulSoup(html, "html.parser")
-
-        # Удаляем ненужные блоки (скрипты, стили, навигацию)
         [s.extract() for s in soup(["script", "style", "nav", "footer"])]
-
-        # Преобразуем в плоский текст
         return soup.get_text(separator=" ", strip=True)
-    except Exception as e:
-        print(f"[fetch_text_from_url] Ошибка при загрузке {url}: {e}")
+    except Exception as exc:
+        print(f"[fetch_text_from_url] Ошибка при загрузке {url}: {exc}")
         return ""
 
 
-def chunk_text(text: str, max_len=800, overlap=120):
-    """
-    Делит длинный текст на перекрывающиеся куски (чанки),
-    чтобы модель могла работать с контекстом оптимального размера.
-    """
+def chunk_text(text: str, max_len: int = 800, overlap: int = 120):
+    """Делит текст на перекрывающиеся чанки."""
+
     words = text.split()
     for i in range(0, len(words), max_len - overlap):
         yield " ".join(words[i : i + max_len])
 
 
 def collect_documents():
-    """
-    Собирает документы из сети (Rasa docs) и из локальных файлов.
-    Каждый документ — словарь: {'text': ..., 'source': ..., 'lang': ...}
-    """
+    """Возвращает список документов из сети и локальных файлов."""
+
     docs = []
 
-    # 1. Загрузка Rasa документации
     urls = [BASE_URL]
     for url in tqdm(urls, desc="Сбор документации Rasa"):
         text = fetch_text_from_url(url)
         for chunk in chunk_text(text):
             docs.append({"text": chunk, "source": url, "lang": "en"})
 
-    # 2. Загрузка локальных текстов из папки data/
     for file in LOCAL_DIR.glob("*.txt"):
         try:
             txt = file.read_text(encoding="utf-8")
-            for chunk in chunk_text(txt):
-                docs.append({"text": chunk, "source": str(file), "lang": "ru"})
-        except Exception as e:
-            print(f"[collect_documents] Ошибка при чтении {file}: {e}")
+        except Exception as exc:
+            print(f"[collect_documents] Ошибка при чтении {file}: {exc}")
+            continue
+        for chunk in chunk_text(txt):
+            docs.append({"text": chunk, "source": str(file), "lang": "ru"})
 
     print(f"Собрано {len(docs)} фрагментов текста")
     return docs
 
 
 def ensure_collection(client: QdrantClient):
-    """
-    Проверяет, существует ли коллекция в Qdrant.
-    Если нет — создаёт новую с параметрами модели BGE-M3.
-    """
+    """Создаёт коллекцию, если она отсутствует."""
+
     existing = [c.name for c in client.get_collections().collections]
     if COLLECTION_NAME not in existing:
         print(f"Создаю коллекцию {COLLECTION_NAME} ...")
         client.create_collection(
             COLLECTION_NAME,
             vectors_config=models.VectorParams(
-                size=VECTOR_SIZE, distance=models.Distance.COSINE
+                size=VECTOR_SIZE,
+                distance=models.Distance.COSINE,
             ),
         )
     else:
@@ -111,29 +99,23 @@ def ensure_collection(client: QdrantClient):
 
 
 def main():
-    # --- 1. Подключение к Qdrant ---
     client = QdrantClient(host="localhost", port=6333)
     ensure_collection(client)
 
-    # --- 2. Инициализация модели эмбеддингов ---
-    # BGE-M3 — мультиязычная, поддерживает dense и sparse-вектора
     print("Загрузка модели BAAI/bge-m3 ...")
     model = SentenceTransformer("BAAI/bge-m3")
 
-    # --- 3. Сбор текстов ---
     docs = collect_documents()
     texts = [d["text"] for d in docs]
 
-    # --- 4. Векторизация ---
     print("Создание эмбеддингов ...")
     vectors = model.encode(texts, show_progress_bar=True, batch_size=16)
 
-    # --- 5. Загрузка в Qdrant ---
     print("Загрузка данных в Qdrant ...")
     client.upload_collection(
         collection_name=COLLECTION_NAME,
         vectors=vectors,
-        payload=docs,  # сюда записываются тексты и метаданные
+        payload=docs,
         ids=None,
         batch_size=64,
     )
