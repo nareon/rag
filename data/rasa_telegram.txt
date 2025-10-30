@@ -1,0 +1,6 @@
+Чтобы подключить Telegram к Rasa, создайте бота через BotFather и получите токен.
+Затем добавьте канал в credentials.yml:
+telegram:
+  access_token: "<YOUR_TOKEN>"
+  verify: "<BOT_USERNAME>"
+  webhook_url: "https://yourserver/webhooks/telegram/webhook"
