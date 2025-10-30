@@ -10,7 +10,10 @@ CLI-пайплайн без Rasa:
 """
 
 from __future__ import annotations
-import argparse, textwrap
+
+import argparse
+import textwrap
+from typing import Dict, Iterable, List
 
 try:
     from .actions.retriever import search_hybrid
@@ -29,6 +32,7 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
 # опциональный локальный перевод Argos
 try:
     from argostranslate import translate as argos_translate
+
     _langs = argos_translate.get_installed_languages()
     _ru = next((l for l in _langs if l.code == "ru"), None)
     _en = next((l for l in _langs if l.code == "en"), None)
@@ -41,6 +45,7 @@ SYSTEM_PROMPT = (
     "Если сведений мало, скажи об этом."
 )
 
+
 def maybe_translate_ru2en(q: str) -> str:
     if _to_en:
         try:
@@ -48,6 +53,29 @@ def maybe_translate_ru2en(q: str) -> str:
         except Exception:
             return q
     return q
+
+
+def _merge_hits(
+    *hit_groups: Iterable[Dict[str, object]], limit: int = 4
+) -> List[Dict[str, object]]:
+    """Объединяет результаты ретрива по id и сортирует по score."""
+
+    by_id: Dict[str, Dict[str, object]] = {}
+    for hit in (h for group in hit_groups for h in group):
+        hit_id = hit.get("id")
+        if hit_id is None:
+            continue
+
+        score = hit.get("score")
+        if not isinstance(score, (int, float)):
+            continue
+
+        key = str(hit_id)
+        stored = by_id.get(key)
+        if stored is None or float(score) > float(stored.get("score", float("-inf"))):
+            by_id[key] = hit
+
+    return sorted(by_id.values(), key=lambda h: float(h["score"]), reverse=True)[:limit]
 
 def main():
     ap = argparse.ArgumentParser()
@@ -62,11 +90,7 @@ def main():
     # два ретрива и объединение по id
     hits_ru = search_hybrid(q_ru, lang_filter=["ru", "en"], topk=args.k)
     hits_en = search_hybrid(q_en, lang_filter=["ru", "en"], topk=args.k) if q_en else []
-    by_id = {}
-    for h in hits_en + hits_ru:
-        by_id.setdefault(h["id"], h)
-
-    contexts = list(by_id.values())[: args.k]
+    contexts = _merge_hits(hits_en, hits_ru, limit=args.k)
     if not contexts:
         print("Нет результатов.")
         return
