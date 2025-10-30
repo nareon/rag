@@ -24,6 +24,8 @@ from sentence_transformers import SentenceTransformer
 try:
     from argostranslate import translate as argos_translate
 
+    # Собираем доступные языковые пары один раз при импорте модуля, чтобы
+    # последующие вызовы ``_translate_to_ru`` были максимально быстрыми.
     _langs = argos_translate.get_installed_languages()
     _ru_lang = next((lang for lang in _langs if lang.code == "ru"), None)
     _translators_to_ru = []
@@ -40,6 +42,8 @@ except Exception:
 
 # ----------- Настройки хранилища -----------
 LOCAL_DIR = Path("data")
+# Хранилище складываем рядом с модулем, чтобы можно было легко упаковать
+# каталог ``light`` и перенести его на офлайн-машину.
 STORE_DIR = Path(__file__).resolve().parent / "store"
 CHUNK_SIZE = int(os.getenv("RAG_CHUNK_SIZE", "800"))
 CHUNK_OVERLAP = int(os.getenv("RAG_CHUNK_OVERLAP", "120"))
@@ -48,6 +52,8 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-m3")
 
 
 def _chunk_text(text: str, max_len: int, overlap: int) -> Iterable[str]:
+    """Разбивает текст на список слов и собирает чанки заданной длины."""
+
     words = text.split()
     step = max(1, max_len - overlap)
     for start in range(0, len(words), step):
@@ -55,6 +61,8 @@ def _chunk_text(text: str, max_len: int, overlap: int) -> Iterable[str]:
 
 
 def _looks_like_russian(text: str) -> bool:
+    """Эвристика: какой алфавит преобладает в строке."""
+
     if not text:
         return True
     cyr = sum("а" <= ch.lower() <= "я" or ch.lower() == "ё" for ch in text if ch.isalpha())
@@ -63,6 +71,8 @@ def _looks_like_russian(text: str) -> bool:
 
 
 def _translate_to_ru(text: str) -> str:
+    """При необходимости переводит текст в русский."""
+
     if not text or _looks_like_russian(text) or not _translators_to_ru:
         return text
     for code, translator in _translators_to_ru:
@@ -70,10 +80,13 @@ def _translate_to_ru(text: str) -> str:
             return translator.translate(text)
         except Exception:
             continue
+    # Если ни один переводчик не справился, возвращаем оригинал.
     return text
 
 
 def _load_local_documents() -> List[Dict[str, str]]:
+    """Читает *.txt из папки ``data`` и подготавливает чанки."""
+
     docs: List[Dict[str, str]] = []
     for file in sorted(LOCAL_DIR.glob("*.txt")):
         try:
@@ -83,11 +96,15 @@ def _load_local_documents() -> List[Dict[str, str]]:
             continue
         text = _translate_to_ru(text)
         for chunk in _chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP):
+            # Каждому чанку присваиваем источник и язык, чтобы при выдаче
+            # информации легко формировать ссылки и сообщения для пользователя.
             docs.append({"text": chunk, "source": str(file), "lang": "ru"})
     return docs
 
 
 def main() -> None:
+    """Главная точка входа для сборки локального стора."""
+
     docs = _load_local_documents()
     if not docs:
         raise SystemExit("Не найдено документов в папке data/*.txt")
@@ -95,6 +112,8 @@ def main() -> None:
     texts = [doc["text"] for doc in docs]
     print(f"Собрано {len(texts)} фрагментов, подготавливаю эмбеддинги ...")
 
+    # В продакшене модель заранее закешируется, но для CLI каждое выполнение
+    # может запускать скрипт с нуля, поэтому создаём её непосредственно здесь.
     model = SentenceTransformer(EMBED_MODEL)
     embeddings = model.encode(
         texts,
@@ -105,6 +124,8 @@ def main() -> None:
 
     STORE_DIR.mkdir(parents=True, exist_ok=True)
     emb_path = STORE_DIR / "embeddings.npy"
+    # Сохраняем эмбеддинги в компактном формате float32.  Для чтения в CLI
+    # достаточно вызвать ``np.load`` без дополнительных параметров.
     np.save(emb_path, np.asarray(embeddings, dtype=np.float32))
 
     payload_path = STORE_DIR / "payloads.jsonl"
@@ -120,6 +141,8 @@ def main() -> None:
         "count": len(docs),
         "translate_used": bool(_translators_to_ru),
     }
+    # Метаданные помогают CLI убедиться, что оно использует ту же модель и
+    # параметры, что и при построении стора, иначе качество поиска резко падает.
     with (STORE_DIR / "metadata.json").open("w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
