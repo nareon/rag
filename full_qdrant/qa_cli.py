@@ -12,8 +12,19 @@ CLI-пайплайн без Rasa:
 from __future__ import annotations
 import argparse, textwrap
 
-from .actions.retriever import search_hybrid
-from .actions.llm_client import LLMClient
+try:
+    from .actions.retriever import search_hybrid
+    from .actions.llm_client import LLMClient
+except ImportError:  # pragma: no cover - fallback for direct script execution
+    import pathlib
+    import sys
+
+    pkg_root = pathlib.Path(__file__).resolve().parent
+    if str(pkg_root) not in sys.path:
+        sys.path.insert(0, str(pkg_root))
+
+    from actions.retriever import search_hybrid  # type: ignore
+    from actions.llm_client import LLMClient  # type: ignore
 
 # опциональный локальный перевод Argos
 try:
