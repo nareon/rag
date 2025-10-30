@@ -18,21 +18,19 @@ from pathlib import Path
 
 # ---------------- Загрузка окружения ----------------
 # Подтягивает .env из корня проекта
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / ".env")
 
 # ---------------- Класс клиента ----------------
 class LLMClient:
-    """
-    Обёртка над /v1/chat/completions.
-    """
+    """Обёртка над /v1/chat/completions."""
 
     def __init__(self):
         # Все параметры только из окружения
         self.base_url = os.getenv("OPENAI_BASE_URL", "").rstrip("/")
-        self.api_key  = os.getenv("OPENAI_API_KEY", "")
-        self.model    = os.getenv("OPENAI_MODEL", "")
-        self.timeout  = float(os.getenv("LLM_TIMEOUT", "60"))
-        self.retries  = int(os.getenv("LLM_RETRIES", "2"))
+        self.api_key = os.getenv("OPENAI_API_KEY", "")
+        self.model = os.getenv("OPENAI_MODEL", "")
+        self.timeout = float(os.getenv("LLM_TIMEOUT", "60"))
+        self.retries = int(os.getenv("LLM_RETRIES", "2"))
 
         if not self.base_url or not self.model:
             raise RuntimeError("Не заданы OPENAI_BASE_URL или OPENAI_MODEL в .env")
@@ -47,10 +45,8 @@ class LLMClient:
         temperature: float = 0.2,
         extra: Optional[Dict[str, Any]] = None,
     ) -> str:
-        """
-        Делает POST-запрос к /chat/completions.
-        Возвращает ответ модели (строку).
-        """
+        """Делает POST-запрос к /chat/completions и возвращает ответ модели."""
+
         url = f"{self.base_url}/chat/completions"
         payload = {
             "model": self.model,
