@@ -89,3 +89,14 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: ask_docs
+  examples: |
+    - Как запустить сервер действий Rasa?
+    - Подскажи, как обучить новую модель Rasa.
+    - Что нужно для подключения Telegram к Rasa?
+    - Как посмотреть истории в Rasa X?
+    - Расскажи, как обновить конфигурацию пайплайна Rasa.
+    - Чем отличается RulePolicy от TEDPolicy?
+    - Как настроить базы знаний в Rasa?
+    - Как задать fallback действие в Rasa?
