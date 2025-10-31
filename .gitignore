@@ -2,3 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .env
+rasa_rag/.rasa
+rasa_rag/models
+rasa_rag/tests
+
