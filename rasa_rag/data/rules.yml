@@ -1,7 +1,6 @@
 version: "3.1"
 
 rules:
-
 - rule: Say goodbye anytime the user says goodbye
   steps:
   - intent: goodbye
@@ -11,3 +10,13 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+- rule: Answer documentation questions with RAG
+  steps:
+  - intent: ask_docs
+  - action: action_rag_answer
+
+- rule: Use RAG on fallback
+  steps:
+  - intent: nlu_fallback
+  - action: action_rag_answer

@@ -8,26 +8,31 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - ask_docs
+  - nlu_fallback
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
+    - text: "Привет! Чем могу помочь по Rasa?"
 
   utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+    - text: "Вот что может поднять настроение:"
+      image: "https://i.imgur.com/nGF1K8f.jpg"
 
   utter_did_that_help:
-  - text: "Did that help you?"
+    - text: "Это помогло?"
 
   utter_happy:
-  - text: "Great, carry on!"
+    - text: "Здорово, продолжай в том же духе!"
 
   utter_goodbye:
-  - text: "Bye"
+    - text: "Пока!"
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+    - text: "Я бот, который помогает с вопросами по Rasa."
+
+actions:
+  - action_rag_answer
 
 session_config:
   session_expiration_time: 60
