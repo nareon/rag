@@ -53,7 +53,8 @@ def chunk_text(text: str, max_len: int = 800, overlap: int = 120):
     """Делит текст на перекрывающиеся чанки."""
 
     words = text.split()
-    for i in range(0, len(words), max_len - overlap):
+    step = max(1, max_len - overlap)
+    for i in range(0, len(words), step):
         yield " ".join(words[i : i + max_len])
 
 
