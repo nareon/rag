@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 
 usage() {
@@ -46,6 +47,7 @@ Creating nginx configuration with the following settings:
 NOTICE
 printf '  Webchat root: %s\n' "$WEBCHAT_ROOT"
 printf '  Rasa REST URL: %s\n' "$RASA_REST_URL"
+
 
 server {
     listen 80;
