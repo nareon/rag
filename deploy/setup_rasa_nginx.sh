@@ -47,7 +47,6 @@ NOTICE
 printf '  Webchat root: %s\n' "$WEBCHAT_ROOT"
 printf '  Rasa REST URL: %s\n' "$RASA_REST_URL"
 
-cat > "$CONFIG_PATH" <<CONFIG
 server {
     listen 80;
     server_name _;
@@ -70,7 +69,7 @@ server {
 }
 CONFIG
 
-echo "Wrote nginx configuration to $CONFIG_PATH"
+
 
 ln -sf "$CONFIG_PATH" "$ENABLED_PATH"
 echo "Symlinked $CONFIG_PATH to $ENABLED_PATH"
