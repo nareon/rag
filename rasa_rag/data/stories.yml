@@ -29,6 +29,13 @@ stories:
   - intent: affirm
   - action: utter_request_case
 
+- story: benefits back to integrations
+  steps:
+  - intent: ask_benefits
+  - action: utter_ask_benefits
+  - intent: ask_integrations
+  - action: utter_ask_integrations
+
 - story: technology overview
   steps:
   - intent: greet
