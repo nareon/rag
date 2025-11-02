@@ -9,6 +9,7 @@ stories:
   - intent: ask_differentiators
   - action: utter_ask_differentiators
   - intent: affirm
+  - action: utter_acknowledge
   - action: utter_request_case
   - intent: ask_integrations
   - action: utter_ask_integrations
@@ -20,6 +21,7 @@ stories:
   - intent: ask_benefits
   - action: utter_ask_benefits
   - intent: affirm
+  - action: utter_acknowledge
   - action: utter_request_case
 
 - story: integrations confirm case
@@ -27,6 +29,7 @@ stories:
   - intent: ask_integrations
   - action: utter_ask_integrations
   - intent: affirm
+  - action: utter_acknowledge
   - action: utter_request_case
 
 - story: benefits back to integrations
