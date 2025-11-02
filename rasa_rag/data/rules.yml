@@ -1,22 +1,18 @@
 version: "3.1"
 
 rules:
-- rule: Say goodbye anytime the user says goodbye
+- rule: say goodbye on goodbye intent
   steps:
   - intent: goodbye
   - action: utter_goodbye
 
-- rule: Say 'I am a bot' anytime the user challenges
+- rule: acknowledge open question and answer with knowledge base
   steps:
-  - intent: bot_challenge
-  - action: utter_iamabot
-
-- rule: Answer documentation questions with RAG
-  steps:
-  - intent: ask_docs
+  - intent: ask_open_question
+  - action: utter_acknowledge_open
   - action: action_rag_answer
 
-- rule: Use RAG on fallback
+- rule: use knowledge base on fallback
   steps:
   - intent: nlu_fallback
   - action: action_rag_answer
