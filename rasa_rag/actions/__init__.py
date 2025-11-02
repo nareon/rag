@@ -1,4 +1,4 @@
-"""Actions package exposing the RAG pipeline for Rasa."""
+"""Actions package exposing the intelligent assistant pipeline."""
 
 from .actions import ActionRAGAnswer
 

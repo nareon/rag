@@ -3,100 +3,86 @@ version: "3.1"
 nlu:
 - intent: greet
   examples: |
-    - hey
-    - hello
-    - hi
-    - hello there
-    - good morning
-    - good evening
-    - moin
-    - hey there
-    - let's go
-    - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
+    - привет
+    - здравствуйте
+    - добрый день
+    - добрый вечер
+    - хеллоу
+    - приветствую
+    - здравствуй
+    - салют
+    - доброе утро
 
 - intent: goodbye
   examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
-    - bye
-    - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
+    - пока
+    - до свидания
+    - благодарю, пока
+    - всего доброго
+    - увидимся
+    - спасибо, до встречи
 
 - intent: affirm
   examples: |
-    - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
+    - да
+    - звучит хорошо
+    - верно
+    - согласен
+    - конечно
+    - хочу
 
 - intent: deny
   examples: |
-    - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
-    - not really
+    - нет
+    - не нужно
+    - не хочу
+    - пожалуй, нет
+    - неинтересно
 
-- intent: mood_great
+- intent: ask_differentiators
   examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
+    - чем ваши чатботы отличаются от обычных?
+    - что делает ваш ассистент умнее остальных?
+    - почему ваше решение не похоже на скриптовых ботов?
+    - объясните, в чем уникальность ваших цифровых сотрудников
 
-- intent: mood_unhappy
+- intent: ask_integrations
   examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
+    - а можно подключить к корпоративному порталу?
+    - какие каналы общения вы поддерживаете?
+    - с какими мессенджерами работает ассистент?
+    - можно ли интегрировать систему с Telegram или Slack?
+    - работает ли решение с Teams?
 
-- intent: bot_challenge
+- intent: ask_benefits
   examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
+    - какая польза бизнесу?
+    - какую эффективность дает внедрение?
+    - насколько снижается нагрузка на поддержку?
+    - какую отдачу получает компания?
 
-- intent: ask_docs
+- intent: request_case
   examples: |
-    - Как запустить сервер действий Rasa?
-    - Подскажи, как обучить новую модель Rasa.
-    - Что нужно для подключения Telegram к Rasa?
-    - Как посмотреть истории в Rasa X?
-    - Расскажи, как обновить конфигурацию пайплайна Rasa.
-    - Чем отличается RulePolicy от TEDPolicy?
-    - Как настроить базы знаний в Rasa?
-    - Как задать fallback действие в Rasa?
+    - хочу пример
+    - покажи кейс
+    - есть пример для банка?
+    - расскажи про реальный проект
+    - интересует кейс из логистики
+
+- intent: ask_technology
+  examples: |
+    - что внутри по технологиям?
+    - как работает ваш интеллектуальный ассистент?
+    - какие алгоритмы используете?
+    - расскажи про технологический стек
+    - из чего состоит решение
+
+- intent: ask_open_question
+  examples: |
+    - расскажи подробнее про варианты внедрения
+    - какие у вас есть кейсы для образования?
+    - какие есть тарифы?
+    - сколько времени занимает запуск?
+    - что нужно для старта проекта?
+    - есть ли поддержка на английском языке?
+    - какие есть ограничения по безопасности?

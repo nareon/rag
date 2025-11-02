@@ -1,4 +1,4 @@
-"""Custom Rasa actions powering the RAG pipeline."""
+"""Custom actions powering the intelligent assistant pipeline."""
 
 from __future__ import annotations
 
@@ -28,8 +28,8 @@ except Exception:  # pragma: no cover - optional dependency
     _to_en = None
 
 SYSTEM_PROMPT = (
-    "Ты ассистент по Rasa. Отвечай кратко и по-русски. Используй только предоставленные выдержки. "
-    "Если сведений мало, скажи об этом."
+    "Ты интеллектуальный ассистент компании. Общайся по-русски, дружелюбно и технологично. "
+    "Используй только предоставленные выдержки и ссылайся на них по номерам. Если сведений мало, честно скажи об этом."
 )
 
 
