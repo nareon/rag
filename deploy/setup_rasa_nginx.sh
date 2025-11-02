@@ -48,7 +48,7 @@ NOTICE
 printf '  Webchat root: %s\n' "$WEBCHAT_ROOT"
 printf '  Rasa REST URL: %s\n' "$RASA_REST_URL"
 
-
+cat >"$CONFIG_PATH" <<CONFIG
 server {
     listen 80;
     server_name _;
@@ -70,7 +70,6 @@ server {
     }
 }
 CONFIG
-
 
 
 ln -sf "$CONFIG_PATH" "$ENABLED_PATH"
