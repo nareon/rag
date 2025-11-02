@@ -53,7 +53,13 @@ NOTICE
 printf '  Webchat root: %s\n' "$WEBCHAT_ROOT"
 printf '  Rasa REST URL: %s\n' "$RASA_REST_URL"
 
-cat > "$CONFIG_PATH" <<CONFIG
+tmp_config="$(mktemp)"
+cleanup_tmp() {
+  rm -f "$tmp_config"
+}
+trap cleanup_tmp EXIT
+
+cat > "$tmp_config" <<CONFIG
 server {
     listen 80;
     server_name _;
@@ -76,7 +82,30 @@ server {
 }
 CONFIG
 
-echo "Wrote nginx configuration to $CONFIG_PATH"
+if [[ -f "$CONFIG_PATH" ]]; then
+  if cmp -s "$tmp_config" "$CONFIG_PATH"; then
+    echo "Existing nginx configuration already matches the desired content."
+    config_changed=0
+  else
+    backup_path="${CONFIG_PATH}.$(date +%Y%m%d%H%M%S).bak"
+    cp "$CONFIG_PATH" "$backup_path"
+    echo "Existing nginx configuration differed; created backup at $backup_path"
+    config_changed=1
+  fi
+else
+  config_changed=1
+fi
+
+if (( config_changed )); then
+  cp "$tmp_config" "$CONFIG_PATH"
+  chmod 644 "$CONFIG_PATH"
+  echo "Wrote nginx configuration to $CONFIG_PATH"
+else
+  echo "No changes written to $CONFIG_PATH"
+fi
+
+cleanup_tmp
+trap - EXIT
 
 ln -sf "$CONFIG_PATH" "$ENABLED_PATH"
 echo "Symlinked $CONFIG_PATH to $ENABLED_PATH"
