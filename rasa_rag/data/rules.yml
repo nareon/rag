@@ -16,3 +16,68 @@ rules:
   steps:
   - intent: nlu_fallback
   - action: action_rag_answer
+
+- rule: handle chatbot development request
+  steps:
+  - intent: request_chatbot_development
+  - action: utter_request_chatbot_development
+
+- rule: handle pricing question
+  steps:
+  - intent: ask_pricing
+  - action: utter_ask_pricing
+
+- rule: handle demo question
+  steps:
+  - intent: ask_demo
+  - action: utter_ask_demo
+
+- rule: handle sales bot question
+  steps:
+  - intent: ask_sales_bot
+  - action: utter_ask_sales_bot
+
+- rule: handle order bot question
+  steps:
+  - intent: ask_order_bot
+  - action: utter_ask_order_bot
+
+- rule: handle support bot question
+  steps:
+  - intent: ask_support_bot
+  - action: utter_ask_support_bot
+
+- rule: handle timeline question
+  steps:
+  - intent: ask_timeline
+  - action: utter_ask_timeline
+
+- rule: handle contact manager request
+  steps:
+  - intent: request_contact_manager
+  - action: utter_request_contact_manager
+
+- rule: handle constructor question
+  steps:
+  - intent: ask_constructor
+  - action: utter_ask_constructor
+
+- rule: handle support service question
+  steps:
+  - intent: ask_support_service
+  - action: utter_ask_support_service
+
+- rule: handle security question
+  steps:
+  - intent: ask_security
+  - action: utter_ask_security
+
+- rule: handle trial question
+  steps:
+  - intent: ask_trial
+  - action: utter_ask_trial
+
+- rule: handle partnership question
+  steps:
+  - intent: ask_partnership
+  - action: utter_ask_partnership

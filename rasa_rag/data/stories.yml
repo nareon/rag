@@ -62,3 +62,32 @@ stories:
   - intent: ask_open_question
   - action: utter_acknowledge_open
   - action: action_rag_answer
+
+- story: informational funnel path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_chatbot_development
+  - action: utter_request_chatbot_development
+  - intent: ask_demo
+  - action: utter_ask_demo
+  - intent: ask_sales_bot
+  - action: utter_ask_sales_bot
+
+- story: evaluation funnel path
+  steps:
+  - intent: ask_pricing
+  - action: utter_ask_pricing
+  - intent: ask_timeline
+  - action: utter_ask_timeline
+  - intent: ask_trial
+  - action: utter_ask_trial
+
+- story: purchase funnel path
+  steps:
+  - intent: request_contact_manager
+  - action: utter_request_contact_manager
+  - intent: ask_support_service
+  - action: utter_ask_support_service
+  - intent: ask_security
+  - action: utter_ask_security
