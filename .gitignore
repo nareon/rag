@@ -5,4 +5,5 @@ __pycache__/
 rasa_rag/.rasa
 rasa_rag/models
 rasa_rag/tests
+rasa_rag/nohup.out
 
