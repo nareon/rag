@@ -11,6 +11,19 @@ intents:
   - request_case
   - ask_technology
   - ask_open_question
+  - request_chatbot_development
+  - ask_pricing
+  - ask_demo
+  - ask_sales_bot
+  - ask_order_bot
+  - ask_support_bot
+  - ask_timeline
+  - request_contact_manager
+  - ask_constructor
+  - ask_support_service
+  - ask_security
+  - ask_trial
+  - ask_partnership
   - nlu_fallback
 
 responses:
@@ -24,6 +37,10 @@ responses:
           payload: "/ask_integrations"
         - title: "Технологии"
           payload: "/ask_technology"
+        - title: "Сроки и стоимость"
+          payload: "/ask_pricing"
+        - title: "Связаться с менеджером"
+          payload: "/request_contact_manager"
 
   utter_goodbye:
     - text: "Буду на связи, обращайтесь, когда появятся новые вопросы!"
@@ -42,12 +59,14 @@ responses:
 
   utter_ask_integrations:
     - text: |
-        Подключаем корпоративные порталы, Telegram, WhatsApp, Teams, Slack и веб-виджеты. Интеграция идет через открытые API и коннекторы. Хотите узнать, как это выглядело у клиента из банковской отрасли?
+        Подключаем корпоративные порталы, Telegram, WhatsApp, Teams, Slack, веб-виджеты, CRM и 1С. Интеграция идет через открытые API и коннекторы. Хотите узнать, как это выглядело у клиента из банковской отрасли?
       buttons:
         - title: "Да, кейс из банка"
           payload: "/request_case"
         - title: "Какая польза бизнесу?"
           payload: "/ask_benefits"
+        - title: "Безопасность"
+          payload: "/ask_security"
 
   utter_ask_benefits:
     - text: |
@@ -57,6 +76,8 @@ responses:
           payload: "/request_case"
         - title: "Какие интеграции?"
           payload: "/ask_integrations"
+        - title: "Стоимость"
+          payload: "/ask_pricing"
 
   utter_request_case:
     - text: |
@@ -68,6 +89,10 @@ responses:
           payload: "/ask_benefits"
         - title: "Свободный вопрос"
           payload: "/ask_open_question"
+        - title: "Стоимость"
+          payload: "/ask_pricing"
+        - title: "Свяжите с менеджером"
+          payload: "/request_contact_manager"
 
   utter_ask_technology:
     - text: |
@@ -77,9 +102,154 @@ responses:
           payload: "/ask_benefits"
         - title: "Хочу пример"
           payload: "/request_case"
+        - title: "Как проходит демо"
+          payload: "/ask_demo"
 
   utter_acknowledge_open:
     - text: "Сейчас посмотрю информацию и поделюсь деталями."
+
+  utter_request_chatbot_development:
+    - text: |
+        Создадим чатбот под задачи вашего бизнеса: разберем сценарии, подключим к сайту j64.ru и нужным каналам, обучим на вашей базе знаний. Чтобы предложить оптимальный подход, расскажите, какие цели ставите и какие сервисы нужно подключить.
+      buttons:
+        - title: "Примеры кейсов"
+          payload: "/request_case"
+        - title: "Стоимость и сроки"
+          payload: "/ask_pricing"
+        - title: "Связаться с менеджером"
+          payload: "/request_contact_manager"
+
+  utter_ask_pricing:
+    - text: |
+        Стоимость зависит от количества каналов, сложности сценариев и интеграций. Есть пакет для быстрого MVP, расширенный тариф с подключением CRM и enterprise-формат. Могу подготовить ориентировочный расчет, если поделитесь отраслью и ожидаемым объемом обращений.
+      buttons:
+        - title: "Обсудить с менеджером"
+          payload: "/request_contact_manager"
+        - title: "Сроки внедрения"
+          payload: "/ask_timeline"
+        - title: "Пилот"
+          payload: "/ask_trial"
+
+  utter_ask_demo:
+    - text: |
+        Мы показываем живую демонстрацию: как бот понимает намерения, использует RAG-поиск по базе знаний и передает диалог менеджеру. Можем подключить к демо ваши данные. Оставьте контакт — отправим приглашение и сценарий.
+      buttons:
+        - title: "Записаться на демо"
+          payload: "/request_contact_manager"
+        - title: "Примеры кейсов"
+          payload: "/request_case"
+        - title: "Пробный период"
+          payload: "/ask_trial"
+
+  utter_ask_sales_bot:
+    - text: |
+        Для продаж бот отбирает лидов, квалифицирует по сценариям и передает в CRM. Интегрируем формы сайта, мессенджеры и телефонию, чтобы заявки не терялись. Можем подключить скоринг и автоназначение менеджеру.
+      buttons:
+        - title: "Хочу пример"
+          payload: "/request_case"
+        - title: "Стоимость"
+          payload: "/ask_pricing"
+        - title: "Интеграции"
+          payload: "/ask_integrations"
+
+  utter_ask_order_bot:
+    - text: |
+        Бот берет заказы, оформляет бронирования и записывает клиентов в календарь. Настраиваем интеграции с CRM, 1С, amoCRM, онлайн-оплатой и расписанием сотрудников. Подскажите, какие системы используете — предложим схему подключения.
+      buttons:
+        - title: "Интеграции"
+          payload: "/ask_integrations"
+        - title: "Сроки"
+          payload: "/ask_timeline"
+        - title: "Поддержка"
+          payload: "/ask_support_service"
+
+  utter_ask_support_bot:
+    - text: |
+        Для поддержки клиентов бот закрывает до 80% типовых вопросов, берет данные из базы знаний и передает сложные обращения оператору. Автообучение помогает быстро обновлять ответы. Можем подключить омниканальные каналы и внутренние базы.
+      buttons:
+        - title: "Показать кейс"
+          payload: "/request_case"
+        - title: "Поддержка после запуска"
+          payload: "/ask_support_service"
+        - title: "Интеграции"
+          payload: "/ask_integrations"
+
+  utter_ask_timeline:
+    - text: |
+        Пилотный бот запускается за 3–4 недели: анализируем задачи, проектируем сценарии, обучаем модель и тестируем с командой. Полноценное внедрение с интеграциями занимает 6–8 недель. Готовы обсудить детали проекта и составить дорожную карту.
+      buttons:
+        - title: "Обсудить с менеджером"
+          payload: "/request_contact_manager"
+        - title: "Пробный период"
+          payload: "/ask_trial"
+        - title: "Стоимость"
+          payload: "/ask_pricing"
+
+  utter_request_contact_manager:
+    - text: |
+        Передам ваш запрос менеджеру. Напишите, пожалуйста, имя, должность и удобный канал связи — почта или мессенджер. Мы вернемся с предложением в течение рабочего дня.
+      buttons:
+        - title: "Хочу демо"
+          payload: "/ask_demo"
+        - title: "Сроки проекта"
+          payload: "/ask_timeline"
+        - title: "Партнерство"
+          payload: "/ask_partnership"
+
+  utter_ask_constructor:
+    - text: |
+        У нас есть конструктор для самостоятельной настройки: готовые блоки сценариев, генерация ответов и обучение на документах. При необходимости команда подключится для сложных интеграций. Расскажите, сколько у вас операторов и каналов, чтобы подсказать оптимальный план.
+      buttons:
+        - title: "Тарифы"
+          payload: "/ask_pricing"
+        - title: "Обсудить детали"
+          payload: "/request_contact_manager"
+        - title: "Пробный период"
+          payload: "/ask_trial"
+
+  utter_ask_support_service:
+    - text: |
+        После запуска предоставляем SLA-поддержку: мониторим диалоги, обновляем сценарии, обучаем модели и добавляем новые интеграции. Доступна круглосуточная линия и менеджер проекта. Можно выбрать пакет сопровождения или подключить команду по запросу.
+      buttons:
+        - title: "Стоимость обслуживания"
+          payload: "/ask_pricing"
+        - title: "Безопасность"
+          payload: "/ask_security"
+        - title: "Связаться с менеджером"
+          payload: "/request_contact_manager"
+
+  utter_ask_security:
+    - text: |
+        Храним данные в защищенных контурах: по требованию размещаем решение on-premise или в сертифицированных облаках. Шифруем каналы, ведем аудит доступа и соответствуем 152-ФЗ. Готовы подписать NDA и согласовать политику безопасности.
+      buttons:
+        - title: "Интеграции"
+          payload: "/ask_integrations"
+        - title: "Пилот"
+          payload: "/ask_trial"
+        - title: "Связаться с менеджером"
+          payload: "/request_contact_manager"
+
+  utter_ask_trial:
+    - text: |
+        Предлагаем пилотный проект: подключаем один канал, обучаем на вашем контенте и измеряем результат за 2–4 недели. По итогам обсуждаем масштабирование и тариф. Хотите забронировать слот на запуск пилота?
+      buttons:
+        - title: "Да, свяжитесь со мной"
+          payload: "/request_contact_manager"
+        - title: "Посмотреть демо"
+          payload: "/ask_demo"
+        - title: "Сроки"
+          payload: "/ask_timeline"
+
+  utter_ask_partnership:
+    - text: |
+        Мы открыты к партнерствам: white-label, реферальные программы и совместные внедрения. Предоставим обучение, маркетинговые материалы и техническую поддержку. Расскажите о вашей модели сотрудничества — пришлем условия.
+      buttons:
+        - title: "Обсудить детали"
+          payload: "/request_contact_manager"
+        - title: "Кейсы"
+          payload: "/request_case"
+        - title: "Стоимость"
+          payload: "/ask_pricing"
 
 actions:
   - action_rag_answer
