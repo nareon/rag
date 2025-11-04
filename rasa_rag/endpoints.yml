@@ -1,2 +1,9 @@
+tracker_store:
+  type: SQL
+  dialect: "postgresql"
+  url: "localhost:5432"
+  db: "postgres"
+  username: "postgres"
+  password: "postgres"
 action_endpoint:
   url: "http://localhost:5055/webhook"
